@@ -50,6 +50,7 @@ export async function buildScript(
         prefixes: [],
         fallback: '',
         dohUrl: '',
+        dohFallbackEnabled: false,
         mainDomain: `${workerName}.${subdomain}`
     };
 

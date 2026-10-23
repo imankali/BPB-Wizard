@@ -44,3 +44,20 @@ irm https://raw.githubusercontent.com/bia-pain-bache/BPB-Wizard/main/install.ps1
 3. **Cross platform CLI**: Works on all major operating systems i.e. Windows, Android (Termux), macOS and Linux.
 4. **ONE-CLICK installation**: Web edition creates a permanent `Private Link` to install BPB Panel on your account with one click in a few seconds.
 5. **Privacy**: Web edition gets deployed directly from this repository and CLI edition is built using Github action. There's no storage and all open-source.
+
+
+## Custom panel source
+
+This fork installs the panel from [`imankali/BPB-Worker-Panel`](https://github.com/imankali/BPB-Worker-Panel), in both the web wizard and the CLI installer scripts.
+
+Before installing:
+
+1. Open **Actions → Build and Release** in the panel repository.
+2. Run the workflow on `main` and wait for it to succeed.
+3. Confirm that the latest stable release contains a `worker.js` asset.
+
+The wizard downloads `https://github.com/imankali/BPB-Worker-Panel/releases/latest/download/worker.js`; source code alone is not enough. Without a published stable release, installation fails with HTTP 404. No fallback to the upstream panel is used.
+
+The web wizard’s pre-release option requires a `dev` branch whose `package.json` version has a matching `v<version>` release with a `worker.js` asset. Use stable installation if that branch/release does not exist.
+
+Deploy this wizard fork to Cloudflare to use the custom source in the web edition. The public upstream wizard URL still installs the upstream panel. For the CLI edition, run this fork’s `install.sh` or `install.ps1`; the Wizard executable itself continues to come from upstream releases.

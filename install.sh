@@ -34,7 +34,7 @@ fi
 BINARY="wizard"
 INSTALL_DIR="bpb-wizard"
 ARCHIVE="BPB-Wizard-${OS_LOWER}-${ARCH}.${EXT}"
-WORKER_URL="https://github.com/bia-pain-bache/BPB-Worker-Panel/releases/latest/download/worker.js"
+WORKER_URL="https://github.com/imankali/BPB-Worker-Panel/releases/latest/download/worker.js"
 ARCHIVE_URL="https://github.com/bia-pain-bache/BPB-Wizard/releases/latest/download/${ARCHIVE}"
 
 LATEST_VERSION=$(curl -fsSL https://raw.githubusercontent.com/bia-pain-bache/BPB-Wizard/main/VERSION)
@@ -72,7 +72,10 @@ if [ "${NEEDS_INSTALL}" = "1" ]; then
 fi
 
 echo "Downloading worker.js..."
-curl -fsSL -o "${INSTALL_DIR}/worker.js" "${WORKER_URL}"
+if ! curl -fsSL -o "${INSTALL_DIR}/worker.js" "${WORKER_URL}"; then
+    echo "Failed to download panel. Publish a stable release with worker.js in imankali/BPB-Worker-Panel."
+    exit 1
+fi
 
 export LAUNCHED_BY_SCRIPT="1"
 

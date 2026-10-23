@@ -29,6 +29,12 @@ export default {
                     const formData = await request.formData();
                     const apiToken = key ? await decrypt(key, env.SECRET) : formData.get('apiToken')?.toString().trim() ?? '';
                     const deployType = formData.get('deployType')?.toString() || 'workers';
+                    if (!env.SECRET || env.SECRET.length < 32) {
+                        throw new Error('Configure a strong SECRET of at least 32 characters before deployment.');
+                    }
+                    if (deployType !== 'workers' && deployType !== 'pages') {
+                        throw new Error('Invalid deployment type.');
+                    }
                     const account = await CFAccount.create(apiToken);
 
                     let workerName: string;

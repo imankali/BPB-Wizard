@@ -1,4 +1,4 @@
-import Cloudflare, { Uploadable } from 'cloudflare';
+import Cloudflare, { type Uploadable } from 'cloudflare';
 import { randSubdomain } from './random';
 
 export class CFAccount {
@@ -27,6 +27,7 @@ export class CFAccount {
             client.user.get(),
         ]);
 
+        if (!accounts.result.length) throw new Error('No accessible Cloudflare account found.');
         return new CFAccount(token, client, accounts.result[0].id, user.email.toLowerCase());
     }
 
@@ -36,15 +37,16 @@ export class CFAccount {
                 await this.client.pages.projects.get(name, {
                     account_id: this.id,
                 });
+            } else {
+                await this.client.workers.scripts.get(name, {
+                    account_id: this.id,
+                });
             }
-
-            await this.client.workers.scripts.get(name, {
-                account_id: this.id,
-            });
 
             return true;
         } catch (error) {
-            return false;
+            if (error instanceof Cloudflare.APIError && error.status === 404) return false;
+            throw error;
         }
     }
 
@@ -78,7 +80,7 @@ export class CFAccount {
                     subdomain: randSubdomain(),
                 });
 
-                return res.subdomain;
+                return `${res.subdomain}.workers.dev`;
             } catch (err) {
                 continue;
             }

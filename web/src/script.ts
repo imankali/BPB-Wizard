@@ -17,15 +17,15 @@ export async function buildScript(
     const pathCharset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456780-_';
     const passCharset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@$&*_-+;:,.';
 
-    let url = 'https://github.com/bia-pain-bache/BPB-Worker-Panel/releases/latest/download/worker.js';
+    let url = 'https://github.com/imankali/BPB-Worker-Panel/releases/latest/download/worker.js';
     if (preRelease) {
-        const res = await fetch('https://raw.githubusercontent.com/bia-pain-bache/BPB-Worker-Panel/refs/heads/dev/package.json');
+        const res = await fetch('https://raw.githubusercontent.com/imankali/BPB-Worker-Panel/refs/heads/dev/package.json');
         if(!res.ok) {
             throw new Error(`Failed to get pre-release script: status ${res.status} at ${res.url}`);
         }
 
         const { version } = await res.json() as any;
-        url = `https://github.com/bia-pain-bache/BPB-Worker-Panel/releases/download/v${version}/worker.js`;
+        url = `https://github.com/imankali/BPB-Worker-Panel/releases/download/v${version}/worker.js`;
     }
 
     const res = await fetch(url);
@@ -50,6 +50,7 @@ export async function buildScript(
         prefixes: [],
         fallback: '',
         dohUrl: '',
+        dohFallbackEnabled: false,
         mainDomain: `${workerName}.${subdomain}`
     };
 

@@ -2,19 +2,24 @@ package internal
 
 import (
 	"fmt"
-	mrand "math/rand"
+	"crypto/rand"
+	"math/big"
 	"strings"
 )
 
 func randInt(min, max int) int {
-	return mrand.Intn(max-min+1) + min
+	n, err := rand.Int(rand.Reader, big.NewInt(int64(max-min+1)))
+	if err != nil {
+		panic(fmt.Sprintf("secure random generation failed: %v", err))
+	}
+	return int(n.Int64()) + min
 }
 
 func randString(charset string, minLen, maxLen int) string {
-	length := minLen + mrand.Intn(maxLen-minLen+1)
+	length := randInt(minLen, maxLen)
 	bytes := make([]byte, length)
 	for i := range bytes {
-		bytes[i] = charset[mrand.Intn(len(charset))]
+		bytes[i] = charset[randInt(0, len(charset)-1)]
 	}
 	
 	return string(bytes)
